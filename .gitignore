@@ -1,1 +1,6 @@
-﻿
+﻿Library
+Temp
+.vs
+Framework_CSharp.CSharp.csproj
+Framework_CSharp.CSharp.Editor.csproj
+Framework_CSharp.sln
