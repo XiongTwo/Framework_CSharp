@@ -20,7 +20,10 @@ public class GameManage {
     private void InitManages()
     {
         ControllerManage.Instance.Init();
+        TimeManage.Instance.Init();
+        AudioManage.Instance.Init();
 
+        Input.multiTouchEnabled = false;
         isInitManages = true;
     }
 
@@ -28,7 +31,6 @@ public class GameManage {
     {
         if (!isInitManages)
             InitManages();
-        Debug.Log("Event.example");
-        EventManage.Instance.Broadcast(EventEnum.example);
+        EventManage.Instance.Broadcast(EventEnum.start_game);
     }
 }

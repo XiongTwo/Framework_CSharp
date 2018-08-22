@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class ExampleControll {
 
-    private ExampleMode mExampleMode;
-    private ExampleView mExampleView;
+    public ExampleMode mExampleMode;
+    public ExampleView mExampleView;
 
     public ExampleControll()
     {
@@ -14,12 +14,9 @@ public class ExampleControll {
     }
     private void AddListener()
     {
-        EventManage.Instance.AddListener(EventEnum.example, Processor);
+        EventManage.Instance.AddListener<string>(EventEnum.example, Processor);
     }
-    private void Processor()
-    {
-        Processor("show");
-    }
+    
     private void Processor(string type)
     {
         switch (type)
