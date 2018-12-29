@@ -59,11 +59,11 @@ public class CommonMsgBox : MonoBehaviour
 
     public void OnButtonClick()
     {
-        Common.PopupGameObject(panel, () => { mRightButtonCallback(); DestroySelf(); }, false);
+        Common.PopupGameObject(panel, () => { if(mRightButtonCallback!=null) mRightButtonCallback.Invoke(); DestroySelf(); }, false);
     }
     public void OnCancelButtonClick()
     {
-        Common.PopupGameObject(panel, () => { mLeftButtonCallback(); DestroySelf(); }, false);
+        Common.PopupGameObject(panel, () => { if (mLeftButtonCallback != null) mLeftButtonCallback.Invoke(); DestroySelf(); }, false);
     }
 
     public void Close()

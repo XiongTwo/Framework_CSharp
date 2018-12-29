@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CardArithmetic {
+public class CardArithmetic
+{
 
 
     public enum CardType
@@ -42,20 +43,20 @@ public class CardArithmetic {
         string log = "";
         for (int i = 0; i < datas.Count; i++)
             log += datas[i].number + ",";
-        Debug.LogError(log);
+        //Debug.LogError(log);
 
         if (datas.Count == 1)//单张
             return CardType.单张;
         if (datas.Count == 2)//对子，王炸
         {
-            if(datas[0].number== datas[1].number)
+            if (datas[0].number == datas[1].number)
                 return CardType.对子;
-            if (datas[0].number==19&& datas[1].number == 18)
+            if (datas[0].number == 19 && datas[1].number == 18)
                 return CardType.王炸;
         }
         if (datas.Count == 3)//三条
         {
-            if (datas[0].number == datas[1].number&& datas[0].number== datas[2].number)
+            if (datas[0].number == datas[1].number && datas[0].number == datas[2].number)
                 return CardType.三条;
         }
         if (datas.Count == 4)//三带一,炸弹
@@ -93,7 +94,7 @@ public class CardArithmetic {
         {
             if (datas[0].number == datas[1].number && datas[0].number == datas[2].number && datas[0].number == datas[3].number)
             {
-                if (datas[4].number == datas[5].number&& datas[6].number == datas[7].number)
+                if (datas[4].number == datas[5].number && datas[6].number == datas[7].number)
                     return CardType.四带对;
             }
             if (datas[7].number == datas[6].number && datas[7].number == datas[5].number && datas[7].number == datas[4].number)
@@ -109,12 +110,13 @@ public class CardArithmetic {
         }
 
         CardType type = CardType.Nnll;
-        if (datas.Count >= 5) {
+        if (datas.Count >= 5)
+        {
             type = IsContinuousSingle(datas);
             if (type != CardType.Nnll)
                 return type; //单顺
         }
-        
+
         if (datas.Count >= 6 && datas.Count % 2 == 0)
         {
             type = IsContinuousTwo(datas);
@@ -135,7 +137,7 @@ public class CardArithmetic {
             if (type != CardType.Nnll)
                 return type; //小飞机
         }
-        
+
         if (datas.Count >= 10 && datas.Count % 5 == 0)
         {
             type = IsBigFly(datas);
@@ -168,7 +170,7 @@ public class CardArithmetic {
                 return CardType.Nnll;
             temp.Add(datas[index]);
         }
-        if(IsContinuousSingle(temp)== CardType.Nnll)
+        if (IsContinuousSingle(temp) == CardType.Nnll)
             return CardType.Nnll;
         return CardType.双顺;
     }
@@ -187,20 +189,20 @@ public class CardArithmetic {
         }
         if (IsContinuousSingle(temp) == CardType.Nnll)
             return CardType.Nnll;
-        return CardType.三顺; 
+        return CardType.三顺;
     }
     static private CardType IsSmallFly(List<CardData> datas)
     {
-        var temp= GetCard(datas,3);
+        var temp = GetCard(datas, 3);
         if (temp.Count < 2)
             return CardType.Nnll;
-        if(IsContinuousSingle(temp)== CardType.Nnll)
+        if (IsContinuousSingle(temp) == CardType.Nnll)
             return CardType.Nnll;
         return CardType.小飞机;
     }
     static private CardType IsBigFly(List<CardData> datas)
     {
-        var temp = GetCard(datas,3);
+        var temp = GetCard(datas, 3);
         if (temp.Count < 2)
             return CardType.Nnll;
         if (IsContinuousSingle(temp) == CardType.Nnll)
@@ -212,13 +214,13 @@ public class CardArithmetic {
             ii.Add(temp[i].number);
         for (int i = 0; i < datas.Count; i++)
         {
-            if(!ii.Contains(datas[i].number))
+            if (!ii.Contains(datas[i].number))
                 dd.Add(datas[i]);
         }
         dd.Sort();
 
         int beishu = dd.Count / 2;
-        if(beishu!= temp.Count)
+        if (beishu != temp.Count)
             return CardType.Nnll;
         for (int i = 0; i < beishu; i++)
         {
@@ -234,7 +236,7 @@ public class CardArithmetic {
     /// </summary>
     /// <param name="datas"></param>
     /// <returns></returns>
-    static private List<CardData> GetCard(List<CardData> datas,int N)
+    static private List<CardData> GetCard(List<CardData> datas, int N)
     {
         List<CardData> temp = new List<CardData>();
         List<int> number = new List<int>();
@@ -264,7 +266,7 @@ public class CardArithmetic {
     /// </summary>
     /// <param name="data"></param>
     /// <returns></returns>
-    static public List<CardData> AutoPlay(List<CardData> selfData, PlayCard data=null)
+    static public List<CardData> AutoPlay(List<CardData> selfData, PlayCard data = null)
     {
         //出牌
         if (data == null)
@@ -279,9 +281,10 @@ public class CardArithmetic {
     /// <returns></returns>
     static private List<CardData> SeparateCard(List<CardData> selfData)
     {
+        //电脑傻逼，只会出最小的单张牌
         List<CardData> data = new List<CardData>();
         selfData.Sort();
-        data.Add(selfData[selfData.Count-1]);
+        data.Add(selfData[selfData.Count - 1]);
         return data;
     }
     /// <summary>
@@ -293,216 +296,74 @@ public class CardArithmetic {
     {
         separateCard.Sort();
         List<CardData> tipsCard = new List<CardData>();
-        CardType type = Check(data);
-
-        if (separateCard.Count >= data.Count)
+        if (data.Count >= 2 && data[0].number == 19 && data[1].number == 18)
         {
-            if (type == CardType.单张)
-            {
-                for (int i = separateCard.Count - 1; i >= 0; i--)
-                {
-                    if (separateCard[i].number > data[0].number)
-                    {
-                        tipsCard.Add(separateCard[i]);
-                        return tipsCard;
-                    }
-                }
-            }
-            else if (type == CardType.对子)
-            {
-                var temp = GetCard(separateCard, 2);
-                temp.Sort();
-                int number = -1;
-                for (int i = temp.Count - 1; i >= 0; i--)
-                {
-                    if (temp[i].number > data[0].number)
-                    {
-                        number = temp[i].number;
-                        break;
-                    }
-                }
-                if (number != -1)
-                {
-                    for (int i = separateCard.Count - 1; i >= 0; i--)
-                    {
-                        if (tipsCard.Count == 2)
-                            return tipsCard;
-                        if (separateCard[i].number == number)
-                            tipsCard.Add(separateCard[i]);
-                    }
-                }
-            }
-            else if (type == CardType.王炸)
-            {
-                return null;
-            }
-            else if (type == CardType.三条)
-            {
-                var temp = GetCard(separateCard, 3);
-                temp.Sort();
-                int number = -1;
-                for (int i = temp.Count - 1; i >= 0; i--)
-                {
-                    if (temp[i].number > data[0].number)
-                    {
-                        number = temp[i].number;
-                        break;
-                    }
-                }
-                if (number != -1)
-                {
-                    for (int i = separateCard.Count - 1; i >= 0; i--)
-                    {
-                        if (tipsCard.Count == 3)
-                            return tipsCard;
-                        if (separateCard[i].number == number)
-                            tipsCard.Add(separateCard[i]);
-                    }
-                }
-            }
-            else if (type == CardType.炸弹)
-            {
-
-            }
-            else if (type == CardType.三带一)
-            {
-                var temp = GetCard(separateCard, 3);
-                temp.Sort();
-                int number = -1;
-                for (int i = temp.Count - 1; i >= 0; i--)
-                {
-                    if (temp[i].number > data[0].number)
-                    {
-                        number = temp[i].number;
-                        break;
-                    }
-                }
-                if (number != -1)
-                {
-                    for (int i = separateCard.Count - 1; i >= 0; i--)
-                    {
-                        if (tipsCard.Count == 3)
-                            break;
-                        if (separateCard[i].number == number)
-                            tipsCard.Add(separateCard[i]);
-                    }
-                    for (int i = separateCard.Count - 1; i >= 0; i--)
-                    {
-                        if (tipsCard.Count == 4)
-                            return tipsCard;
-                        if (separateCard[i].number != number)
-                            tipsCard.Add(separateCard[i]);
-                    }
-                }
-            }
-            else if (type == CardType.三带二)
-            {
-                var temp = GetCard(separateCard, 3);
-                temp.Sort();
-                int number = -1;
-                for (int i = temp.Count - 1; i >= 0; i--)
-                {
-                    if (temp[i].number > data[0].number)
-                    {
-                        number = temp[i].number;
-                        break;
-                    }
-                }
-                if (number != -1)
-                {
-                    for (int i = separateCard.Count - 1; i >= 0; i--)
-                    {
-                        if (tipsCard.Count == 3)
-                            break;
-                        if (separateCard[i].number == number)
-                            tipsCard.Add(separateCard[i]);
-                    }
-
-                    var temp2 = GetCard(separateCard, 2);
-                    temp2.Sort();
-                    int number2 = -1;
-                    for (int i = temp2.Count - 1; i >= 0; i--)
-                    {
-                        if (temp2[i].number != number)
-                        {
-                            number2 = temp2[i].number;
-                            break;
-                        }
-                    }
-                    if (number2 != -1)
-                    {
-                        for (int i = separateCard.Count - 1; i >= 0; i--)
-                        {
-                            if (tipsCard.Count == 5)
-                                return tipsCard;
-                            if (separateCard[i].number == number2)
-                                tipsCard.Add(separateCard[i]);
-                        }
-                    }
-                }
-            }
-            else if (type == CardType.四带二)
-            {
-
-            }
-            else if (type == CardType.四带对)
-            {
-
-            }
-            else if (type == CardType.单顺)
-            {
-                data.Sort();
-
-            }
-            else if (type == CardType.双顺)
-            {
-                data.Sort();
-            }
-            else if (type == CardType.三顺)
-            {
-                data.Sort();
-            }
-            else if (type == CardType.小飞机)
-            {
-
-            }
-            else if (type == CardType.大飞机)
-            {
-
-            }
-        }
-        if (tipsCard.Count == 0)
-        {
-            var temp = GetCard(separateCard,4);
-            if (temp.Count > 0)
-            {
-                int number = -1;
-                for (int i = 0; i < temp.Count; i++)
-                {
-                    if (temp[i].number > data[0].number)
-                    {
-                        number = temp[i].number;
-                        break;
-                    }
-                }
-                if (number != -1)
-                {
-                    for (int i = 0; i < separateCard.Count; i++)
-                    {
-                        if (separateCard[i].number == number)
-                            tipsCard.Add(separateCard[i]);
-                    }
-                    return tipsCard;
-                }
-            }
-            if (separateCard.Count >= 2 && separateCard[0].number == 19 && separateCard[1].number == 18)
-            {
-                tipsCard.Add(separateCard[0]); tipsCard.Add(separateCard[1]);
-                return tipsCard;
-            }
             return null;
         }
-
+        if (separateCard.Count >= data.Count)
+        {
+            List<object> testCardList = new List<object>();
+            List<CardData> array = new List<CardData>(separateCard.ToArray());
+            while(array.Count >= data.Count)
+            {
+                List<CardData> testCard = new List<CardData>();
+                for (int i = 0; i < data.Count; i++)
+                {
+                    testCard.Add(array[i]);
+                }
+                testCardList.Add(testCard);
+                array.RemoveAt(0);
+            }
+            for (int i = testCardList.Count-1; i >= 0; i--)
+            {
+                List<CardData> testCard = testCardList[i] as List<CardData>;
+                bool b= Compare(testCard, data);
+                if (b == true)
+                    return testCard;
+            }
+        }
+        if (Check(data) != CardType.炸弹)
+        {
+            //找个炸弹弄死你
+            var temp = GetCard(separateCard, 4);
+            if (temp.Count > 0)
+            {
+                for (int i = 1; i <= 4; i++)
+                {
+                    tipsCard.Add(temp[temp.Count - i]);
+                }
+                return tipsCard;
+            }
+        }
+        if (separateCard.Count >= 2 && separateCard[0].number == 19 && separateCard[1].number == 18)
+        {
+            tipsCard.Add(separateCard[0]); tipsCard.Add(separateCard[1]);
+            return tipsCard;
+        }
         return null;
+    }
+    static private bool Compare(List<CardData> tips, List<CardData> data)
+    {
+        tips.Sort();
+        data.Sort();
+        CardType dataType = Check(data);
+        CardType tipsType = Check(tips);
+        if (dataType == tipsType)
+        {
+            if (dataType == CardType.单张 || dataType == CardType.对子 || dataType == CardType.三条 ||
+                dataType == CardType.单顺 || dataType == CardType.双顺 || dataType == CardType.三顺 || dataType == CardType.炸弹)
+            {
+                return tips[tips.Count - 1].number > data[data.Count - 1].number ? true : false;
+            }
+            else if (dataType == CardType.三带一 || dataType == CardType.三带二 || dataType == CardType.大飞机|| dataType == CardType.小飞机)
+            {
+                return GetCard(tips, 3)[0].number> GetCard(data, 3)[0].number ? true : false;
+            }
+            else if (dataType == CardType.四带二 || dataType == CardType.四带对)
+            {
+                return GetCard(tips, 4)[0].number > GetCard(data, 4)[0].number ? true : false;
+            }
+        }
+        return false;
     }
 }
